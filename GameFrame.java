@@ -6,7 +6,8 @@ import java.util.List;
 
 /**
  * GameFrame is the main window of the application.
- * It holds the control panel (with buttons) and the GamePanel (where the game is played).
+ * It holds the control panel (with buttons) and the GamePanel (where the game
+ * is played).
  */
 public class GameFrame extends JFrame {
 
@@ -21,7 +22,7 @@ public class GameFrame extends JFrame {
         } catch (RuntimeException e) {
             JOptionPane.showMessageDialog(this,
                     "Failed to connect to database. High scores will not be available.\n" +
-                    "Error: " + e.getMessage(),
+                            "Error: " + e.getMessage(),
                     "Database Connection Error",
                     JOptionPane.ERROR_MESSAGE);
             dbManager = null; // Continue without database functionality
@@ -31,9 +32,23 @@ public class GameFrame extends JFrame {
         gamePanel = new GamePanel(this);
 
         // --- Create the top control panel ---
-        JPanel controlPanel = new JPanel();
+        JPanel controlPanel = new JPanel(new BorderLayout());
         controlPanel.setBackground(Color.DARK_GRAY);
-        controlPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
+
+        // Create logo panel
+        JPanel logoPanel = new JPanel();
+        logoPanel.setBackground(Color.DARK_GRAY);
+        try {
+            ImageIcon appIcon = new ImageIcon("resources/breakout-icon.png"); // use PNG for safety
+            Image scaled = appIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
+            this.setIconImage(scaled);
+        } catch (Exception e) {
+            System.err.println("Failed to load app icon: " + e.getMessage());
+        }
+
+        // Create buttons panel
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        buttonsPanel.setBackground(Color.DARK_GRAY);
 
         // Pause/Play Button
         pausePlayButton = new JButton("Pause");
@@ -50,20 +65,32 @@ public class GameFrame extends JFrame {
         exitButton.setFocusable(false);
         exitButton.addActionListener(e -> System.exit(0));
 
-        controlPanel.add(pausePlayButton);
-        controlPanel.add(highScoresButton);
-        controlPanel.add(exitButton);
+        buttonsPanel.add(pausePlayButton);
+        buttonsPanel.add(highScoresButton);
+        buttonsPanel.add(exitButton);
+
+        controlPanel.add(logoPanel, BorderLayout.NORTH);
+        controlPanel.add(buttonsPanel, BorderLayout.CENTER);
 
         // --- Configure the JFrame ---
         this.setLayout(new BorderLayout());
         this.add(controlPanel, BorderLayout.NORTH); // Add control panel to the top
         this.add(gamePanel, BorderLayout.CENTER); // Add game panel to the center
 
-        this.setTitle("Java Breakout");
+        this.setTitle("Breakout⚽");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(true);
         this.pack(); // Pack frame around components
         this.setLocationRelativeTo(null); // Center on screen
+
+        // Set the window icon to breakout-icon.png
+        try {
+            Image iconImage = Toolkit.getDefaultToolkit().getImage("resources/breakout-icon.png");
+            this.setIconImage(iconImage);
+        } catch (Exception e) {
+            System.err.println("Failed to load icon image: " + e.getMessage());
+        }
+
         this.setVisible(true);
     }
 
@@ -124,6 +151,7 @@ public class GameFrame extends JFrame {
 
     /**
      * Provides access to the DatabaseManager for the GamePanel.
+     * 
      * @return The DatabaseManager instance, or null if connection failed.
      */
     public DatabaseManager getDatabaseManager() {

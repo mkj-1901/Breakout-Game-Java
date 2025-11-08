@@ -69,60 +69,16 @@ PASS=gamepass
 ```
 
 🧠 **Tip:** Replace the credentials with your actual MySQL username and password if needed.  
-Example for MySQL root user:
 
-```
-DB_URL=jdbc:mysql://localhost:3306/game_db
-USER=root
-PASS=your_mysql_password
-```
-
-### Automated Setup (Windows)
+### Automated Exexution (Windows)
 
 Run the setup script that downloads dependencies, extracts the MySQL connector, compiles, and launches the game automatically.
 
-#### Step 1 — Allow Script Execution (first time only)
-
 ```powershell
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+powershell -ExecutionPolicy RemoteSigned -File setup.ps1
 ```
 
-#### Step 2 — Run the Setup Script
-
-```powershell
-.\setup.ps1
-```
-
-### Manual Setup (Linux / macOS)
-
-If you prefer to set it up manually, use the commands below:
-
-#### Download Dependencies
-
-```bash
-wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-9.5.0.tar.gz
-wget https://repo1.maven.org/maven2/io/github/cdimascio/java-dotenv/5.2.2/java-dotenv-5.2.2.jar
-wget https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.9.10/kotlin-stdlib-1.9.10.jar
-```
-
-#### Extract MySQL Connector/J
-
-```bash
-tar -xzf mysql-connector-j-9.5.0.tar.gz
-cp mysql-connector-j-9.5.0/mysql-connector-j-9.5.0.jar .
-```
-
-#### Compile and Run
-
-```bash
-# Compile
-javac -cp "mysql-connector-j-9.5.0.jar:java-dotenv-5.2.2.jar:kotlin-stdlib-1.9.10.jar" *.java
-
-# Run
-java -cp ".:mysql-connector-j-9.5.0.jar:java-dotenv-5.2.2.jar:kotlin-stdlib-1.9.10.jar" Main
-```
-
-### How to Run (Manually)
+### Manual Execution 
 
 #### Compile Java Files
 

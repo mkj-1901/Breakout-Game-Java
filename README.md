@@ -1,77 +1,175 @@
-# Breakout Game Java
+# 🎮 Breakout Game Java
 
-A classic Breakout game implemented in Java using Swing for the graphical user interface. The game features a paddle, ball, bricks, scoring system, timer, pause/play functionality, and high scores stored in a MySQL database.
+A **classic Breakout game** implemented in Java using **Swing** for the graphical user interface.  
+The game features a paddle, ball, bricks, scoring system, timer, pause/play functionality, and high scores stored in a MySQL database.
 
 ![Application Screenshot](resources/app_ss.png)
 
-## Features
+---
 
-- **Classic Gameplay**: Control the paddle to bounce the ball and break all bricks.
-- **Scoring System**: Earn points for each brick destroyed.
-- **Timer**: Track your playtime with a built-in timer.
-- **Pause/Play**: Pause and resume the game at any time.
-- **High Scores**: Save and view high scores in a MySQL database.
-- **Responsive Controls**: Use keyboard or mouse to control the paddle.
+## 🚀 Features
 
-## Libraries and Dependencies
+- 🧱 **Classic Gameplay** — Control the paddle to bounce the ball and break all bricks.  
+- 💯 **Scoring System** — Earn points for each brick destroyed.  
+- ⏱️ **Timer** — Track your playtime with a built-in timer.  
+- ⏸️ **Pause/Play** — Pause and resume the game anytime.  
+- 🏆 **High Scores** — Save and view top scores in a MySQL database.  
+- 🎮 **Responsive Controls** — Use keyboard or mouse to control the paddle.
 
-- **Java Swing**: Built-in Java library for GUI components.
-- **MySQL Connector/J** (mysql-connector-j-9.5.0.jar): JDBC driver for MySQL database connectivity.
-- **java-dotenv** (java-dotenv-5.2.2.jar): Library for loading environment variables from a .env file.
-- **Kotlin Standard Library** (kotlin-stdlib-1.9.10.jar): Dependency for java-dotenv.
+---
 
-## Prerequisites
+## 🧩 Libraries and Dependencies
 
-- **Java**: JDK 8 or higher installed on your system.
-- **MySQL**: MySQL server installed and running.
-- **Git**: For cloning the repository.
+| Library | Description |
+|----------|-------------|
+| **Java Swing** | Built-in Java GUI library |
+| **MySQL Connector/J (mysql-connector-j-9.5.0.jar)** | JDBC driver for MySQL connectivity |
+| **java-dotenv (java-dotenv-5.2.2.jar)** | Loads environment variables from `.env` |
+| **Kotlin Standard Library (kotlin-stdlib-1.9.10.jar)** | Required by java-dotenv |
 
-## Setup Instructions
+---
 
-1. **Clone the Repository**:
-   ```
-   git clone <repository-url>
-   cd OOM_Java_Breakout
-   ```
+## ⚙️ Prerequisites
 
-2. **Set up MySQL Database**:
-   - Create a MySQL database for the game.
-   - Create a `.env` file in the root directory with your database credentials:
-     ```
-     DB_URL=jdbc:mysql://localhost:3306/your_database_name
-     USER=your_mysql_username
-     PASS=your_mysql_password
-     ```
-   - Replace `your_database_name`, `your_mysql_username`, and `your_mysql_password` with your actual MySQL details.
+- **Java** — JDK 8 or higher  
+- **MySQL** — Installed and running  
+- **Git** — For cloning the repository  
+- **PowerShell** — For automated setup (Windows only)
 
-3. **Ensure JAR Dependencies**:
-   - The required JAR files should be present in the project root:
-     - `mysql-connector-j-9.5.0.jar`
-     - `java-dotenv-5.2.2.jar`
-     - `kotlin-stdlib-1.9.10.jar`
+---
 
-## How to Run
+## 🧱 Setup Instructions
 
-1. **Compile the Java Files**:
-   ```
-   javac -cp "mysql-connector-j-9.5.0.jar;java-dotenv-5.2.2.jar;kotlin-stdlib-1.9.10.jar" *.java
-   ```
+### 1. Clone the Repository
 
-2. **Run the Application**:
-   ```
-   java -cp ".;mysql-connector-j-9.5.0.jar;java-dotenv-5.2.2.jar;kotlin-stdlib-1.9.10.jar" Main
-   ```
+```bash
+git clone <repository-url>
+cd Breakout-Game-Java
+```
 
-   - On Windows, use semicolons (`;`) in the classpath.
-   - On Unix-like systems (Linux/Mac), use colons (`:`) instead.
+### 2. Set Up MySQL Database
 
-## Additional Notes
+Run the following SQL commands in your MySQL terminal or MySQL Workbench:
 
-- The database table `highscores` will be created automatically if it doesn't exist when the application starts.
-- If the database connection fails, the game will still run but high scores functionality will be disabled.
-- Use the spacebar or click the "Pause" button to pause/resume the game.
-- The game window is resizable, and the paddle can be controlled with the left and right arrow keys.
+```sql
+CREATE DATABASE game_db;
+CREATE USER 'gameuser'@'localhost' IDENTIFIED BY 'gamepass';
+GRANT ALL PRIVILEGES ON game_db.* TO 'gameuser'@'localhost';
+FLUSH PRIVILEGES;
+```
 
-## License
+### 3. Create .env File
 
-This project is licensed under the terms specified in the LICENSE file.
+Create a file named `.env` in the root directory of the project and add your database credentials:
+
+```
+DB_URL=jdbc:mysql://localhost:3306/game_db
+USER=gameuser
+PASS=gamepass
+```
+
+🧠 **Tip:** Replace the credentials with your actual MySQL username and password if needed.  
+Example for MySQL root user:
+
+```
+DB_URL=jdbc:mysql://localhost:3306/game_db
+USER=root
+PASS=your_mysql_password
+```
+
+### Automated Setup (Windows)
+
+Run the setup script that downloads dependencies, extracts the MySQL connector, compiles, and launches the game automatically.
+
+#### Step 1 — Allow Script Execution (first time only)
+
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+#### Step 2 — Run the Setup Script
+
+```powershell
+.\setup.ps1
+```
+
+### Manual Setup (Linux / macOS)
+
+If you prefer to set it up manually, use the commands below:
+
+#### Download Dependencies
+
+```bash
+wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-9.5.0.tar.gz
+wget https://repo1.maven.org/maven2/io/github/cdimascio/java-dotenv/5.2.2/java-dotenv-5.2.2.jar
+wget https://repo1.maven.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/1.9.10/kotlin-stdlib-1.9.10.jar
+```
+
+#### Extract MySQL Connector/J
+
+```bash
+tar -xzf mysql-connector-j-9.5.0.tar.gz
+cp mysql-connector-j-9.5.0/mysql-connector-j-9.5.0.jar .
+```
+
+#### Compile and Run
+
+```bash
+# Compile
+javac -cp "mysql-connector-j-9.5.0.jar:java-dotenv-5.2.2.jar:kotlin-stdlib-1.9.10.jar" *.java
+
+# Run
+java -cp ".:mysql-connector-j-9.5.0.jar:java-dotenv-5.2.2.jar:kotlin-stdlib-1.9.10.jar" Main
+```
+
+### How to Run (Manually)
+
+#### Compile Java Files
+
+**Windows:**
+
+```cmd
+javac -cp "mysql-connector-j-9.5.0.jar;java-dotenv-5.2.2.jar;kotlin-stdlib-1.9.10.jar" *.java
+```
+
+**Linux/macOS:**
+
+```bash
+javac -cp "mysql-connector-j-9.5.0.jar:java-dotenv-5.2.2.jar:kotlin-stdlib-1.9.10.jar" *.java
+```
+
+#### Run the Game
+
+**Windows:**
+
+```cmd
+java -cp ".;mysql-connector-j-9.5.0.jar;java-dotenv-5.2.2.jar;kotlin-stdlib-1.9.10.jar" Main
+```
+
+**Linux/macOS:**
+
+```bash
+java -cp ".:mysql-connector-j-9.5.0.jar:java-dotenv-5.2.2.jar:kotlin-stdlib-1.9.10.jar" Main
+```
+
+🪟 **Note:** Use semicolons (`;`) on Windows and colons (`:`) on Unix-based systems.
+
+---
+
+## 🧠 Additional Notes
+
+The highscores table is created automatically if it doesn’t exist.
+
+If the database connection fails, the game still runs (high scores disabled).
+
+Use the Spacebar or the Pause Button to pause/resume.
+
+Controls:
+
+⬅️ Left Arrow — Move paddle left
+
+➡️ Right Arrow — Move paddle right
+
+🖱️ Mouse — Move paddle dynamically
+
+The game window is resizable and adapts automatically.

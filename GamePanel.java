@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +47,12 @@ public class GamePanel extends JPanel implements ActionListener {
         this.setBackground(Color.BLACK);
         this.setFocusable(true); // Crucial for KeyListener
         this.addKeyListener(new GameKeyAdapter());
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                togglePause();
+            }
+        });
 
         initGame();
     }
@@ -70,16 +78,17 @@ public class GamePanel extends JPanel implements ActionListener {
 
         score = 0;
         startTime = System.currentTimeMillis();
+        pausedTime = startTime; // Initialize pausedTime to startTime for correct timer calculation
         elapsedTime = 0;
         totalPausedDuration = 0;
-        
-        gameState = GameState.PLAYING;
-        
+
+        gameState = GameState.PAUSED;
+
         if (gameLoopTimer != null) {
             gameLoopTimer.stop();
         }
         gameLoopTimer = new Timer(16, this); // ~60 FPS
-        gameLoopTimer.start();
+        // Do not start the timer here; game starts paused
     }
 
     /**
@@ -119,7 +128,7 @@ public class GamePanel extends JPanel implements ActionListener {
         if (gameState == GameState.PAUSED) {
             drawMessage(g2d, "PAUSED");
         } else if (gameState == GameState.GAME_OVER) {
-            drawMessage(g2d, "GAME OVER! Score: " + score);
+            drawMessage(g2d, "Game Over !!");
         }
     }
 
@@ -156,6 +165,7 @@ public class GamePanel extends JPanel implements ActionListener {
         if (ball.getBounds().intersects(paddle.getBounds())) {
             ball.setY(paddle.getY() - ball.diameter); // Prevent sticking
             ball.reverseY();
+            ball.increaseSpeed(0.1);
             // Optional: Change ball angle based on where it hits the paddle
             // ...
         }
@@ -166,6 +176,7 @@ public class GamePanel extends JPanel implements ActionListener {
             if (brick.isVisible() && ball.getBounds().intersects(brick.getBounds())) {
                 brick.setVisible(false);
                 ball.reverseY(); // Simple bounce
+                ball.increaseSpeed(0.1);
                 score += 10;
 
                 // Check for win
@@ -292,8 +303,8 @@ public class GamePanel extends JPanel implements ActionListener {
                 paddle.keyPressed(e);
             }
             
-            // Allow pause key (e.g., 'P') even if game is over
-            if (e.getKeyCode() == KeyEvent.VK_P) {
+            // Allow pause key (space bar) even if game is over
+            if (e.getKeyCode() == KeyEvent.VK_SPACE) {
                 gameFrame.togglePause();
             }
         }

@@ -1,13 +1,14 @@
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class DatabaseManager {
 
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/game_db"; // Change 'game_db' to your database name
-    private static final String USER = "root";       // Change 'root' to your MySQL username
-    private static final String PASS = "Mayank@1901"; // Change 'your_password' to your MySQL password
-    // --- --- --- --- --- --- --- --- ---
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String DB_URL = dotenv.get("DB_URL");
+    private static final String USER = dotenv.get("USER");
+    private static final String PASS = dotenv.get("PASS");
 
     private Connection conn;
 

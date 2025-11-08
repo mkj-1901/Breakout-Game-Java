@@ -1,0 +1,16 @@
+# Environment variables
+.env
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

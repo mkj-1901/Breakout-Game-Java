@@ -61,7 +61,7 @@ public class GameFrame extends JFrame {
 
         this.setTitle("Java Breakout");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setResizable(false);
+        this.setResizable(true);
         this.pack(); // Pack frame around components
         this.setLocationRelativeTo(null); // Center on screen
         this.setVisible(true);

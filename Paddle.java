@@ -18,7 +18,6 @@ public class Paddle {
 
     public void move(int panelWidth) {
         x += dx * speed;
-        // Prevent paddle from moving off-screen
         if (x <= 0) {
             x = 0;
         }

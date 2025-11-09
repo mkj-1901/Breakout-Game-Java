@@ -1,19 +1,17 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
-/**
- * GameFrame is the main window of the application.
- * It holds the control panel (with buttons) and the GamePanel (where the game
- * is played).
- */
+
+// GameFrame is the main window of the application.
+// It holds the control panel (with buttons) and the GamePanel (where the game is played).
 public class GameFrame extends JFrame {
 
     private GamePanel gamePanel;
     private DatabaseManager dbManager;
     private JButton pausePlayButton;
+    private JLabel scoreLabel;
+    private JLabel timeLabel;
 
     public GameFrame() {
         // Initialize the database manager
@@ -25,7 +23,7 @@ public class GameFrame extends JFrame {
                             "Error: " + e.getMessage(),
                     "Database Connection Error",
                     JOptionPane.ERROR_MESSAGE);
-            dbManager = null; // Continue without database functionality
+            dbManager = null;
         }
 
         // --- Create the main game panel ---
@@ -46,16 +44,32 @@ public class GameFrame extends JFrame {
             System.err.println("Failed to load app icon: " + e.getMessage());
         }
 
-        // Create buttons panel
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 5));
+        // Create buttons panel with score and time
+        JPanel buttonsPanel = new JPanel(new BorderLayout());
         buttonsPanel.setBackground(Color.DARK_GRAY);
+
+        // Left panel for score
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        leftPanel.setBackground(Color.DARK_GRAY);
+        scoreLabel = new JLabel("Score: 0");
+        scoreLabel.setForeground(Color.BLACK);
+        scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        scoreLabel.setOpaque(true);
+        scoreLabel.setBackground(Color.YELLOW);
+        scoreLabel.setPreferredSize(new Dimension(120, 35));
+        scoreLabel.setHorizontalAlignment(JLabel.CENTER);
+        leftPanel.add(scoreLabel);
+
+        // Center panel for buttons
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        centerPanel.setBackground(Color.DARK_GRAY);
 
         // Pause/Play Button
         pausePlayButton = new JButton("Pause");
-        pausePlayButton.setFocusable(false); // So it doesn't interfere with game's KeyListener
+        pausePlayButton.setFocusable(false);
         pausePlayButton.addActionListener(e -> togglePause());
 
-        // High Scores Button (Replaced "Settings" as it's more relevant to the request)
+        // High Scores Button
         JButton highScoresButton = new JButton("High Scores");
         highScoresButton.setFocusable(false);
         highScoresButton.addActionListener(e -> showHighScores());
@@ -65,9 +79,25 @@ public class GameFrame extends JFrame {
         exitButton.setFocusable(false);
         exitButton.addActionListener(e -> System.exit(0));
 
-        buttonsPanel.add(pausePlayButton);
-        buttonsPanel.add(highScoresButton);
-        buttonsPanel.add(exitButton);
+        centerPanel.add(pausePlayButton);
+        centerPanel.add(highScoresButton);
+        centerPanel.add(exitButton);
+
+        // Right panel for time
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+        rightPanel.setBackground(Color.DARK_GRAY);
+        timeLabel = new JLabel("Time: 00:00:00");
+        timeLabel.setForeground(Color.BLACK);
+        timeLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        timeLabel.setOpaque(true);
+        timeLabel.setBackground(Color.YELLOW);
+        timeLabel.setPreferredSize(new Dimension(120, 35));
+        timeLabel.setHorizontalAlignment(JLabel.CENTER);
+        rightPanel.add(timeLabel);
+
+        buttonsPanel.add(leftPanel, BorderLayout.WEST);
+        buttonsPanel.add(centerPanel, BorderLayout.CENTER);
+        buttonsPanel.add(rightPanel, BorderLayout.EAST);
 
         controlPanel.add(logoPanel, BorderLayout.NORTH);
         controlPanel.add(buttonsPanel, BorderLayout.CENTER);
@@ -80,8 +110,8 @@ public class GameFrame extends JFrame {
         this.setTitle("Breakout⚽");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(true);
-        this.pack(); // Pack frame around components
-        this.setLocationRelativeTo(null); // Center on screen
+        this.pack();
+        this.setLocationRelativeTo(null);
 
         // Set the window icon to breakout-icon.png
         try {
@@ -92,12 +122,18 @@ public class GameFrame extends JFrame {
         }
 
         this.setVisible(true);
+
+        // Start a timer to update UI labels
+        Timer uiUpdateTimer = new Timer(100, e -> updateUI());
+        uiUpdateTimer.start();
     }
 
-    /**
-     * Toggles the game between paused and playing states.
-     * Updates the button text accordingly.
-     */
+    private void updateUI() {
+        scoreLabel.setText("Score: " + gamePanel.getScore());
+        timeLabel.setText("Time: " + gamePanel.getFormattedTime());
+    }
+
+    // Toggles the game between paused and playing states.
     public void togglePause() {
         gamePanel.togglePause();
         if (gamePanel.isPaused()) {
@@ -107,9 +143,7 @@ public class GameFrame extends JFrame {
         }
     }
 
-    /**
-     * Fetches and displays the high scores in a dialog box.
-     */
+    // Fetches and displays the high scores in a dialog box.
     private void showHighScores() {
         if (dbManager == null) {
             JOptionPane.showMessageDialog(this,
@@ -149,12 +183,9 @@ public class GameFrame extends JFrame {
         }
     }
 
-    /**
-     * Provides access to the DatabaseManager for the GamePanel.
-     * 
-     * @return The DatabaseManager instance, or null if connection failed.
-     */
     public DatabaseManager getDatabaseManager() {
         return dbManager;
     }
+
+
 }
